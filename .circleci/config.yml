@@ -1,0 +1,63 @@
+version: 2.1
+
+orbs:
+  executor: zchee/golang@1.0.0
+
+jobs:
+  test-linux:
+    executor: executor/stretch
+    working_directory: /go/src/github.com/zchee/go-open
+    steps:
+      - checkout
+      - run:
+          name: Install dependency apt package
+          command: |
+            apt-get update
+            apt-get install -y --no-install-recommends --no-install-suggests \
+              xdg-utils \
+              lynx
+      - run:
+          name: Check versions
+          command: |
+            go version
+            go env
+      - run:
+          name: Test and collect coverages
+          command: |
+            go test -v -race -covermode=atomic -coverpkg=./... -coverprofile=coverage.out ./...
+      - run:
+          name: Upload coverages to codecov
+          command: |
+            bash <(curl -s https://codecov.io/bash) -Z -F linux
+
+  test-darwin:
+    executor: executor/darwin
+    working_directory: ~/go/src/github.com/zchee/go-open
+    steps:
+      - checkout
+      - run:
+          name: Install latest go via brew
+          command: |
+            brew install https://github.com/Homebrew/homebrew-core/raw/master/Formula/go.rb || brew upgrade https://github.com/Homebrew/homebrew-core/raw/master/Formula/go.rb || true
+      - run:
+          name: Check versions
+          command: |
+            go version
+            go env
+      - run:
+          name: Test and collect coverages
+          command: |
+            go test -v -race -covermode=atomic -coverpkg=./... -coverprofile=coverage.out ./...
+      - run:
+          name: Upload coverages to codecov
+          command: |
+            bash <(curl -s https://codecov.io/bash) -Z -F darwin
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - test-linux:
+          context: org-global
+      # - test-darwin:
+      #     context: org-global

@@ -55,7 +55,7 @@ lint/fmt:  ## Verifies all files have been `gofmt`ed.
 .PHONY: lint/govet
 lint/govet:  ## Verifies `go vet` passes.
 	$(call target)
-	@go vet $(shell go list ./... | grep -v vendor) | grep -v '.pb.go:' | tee /dev/stderr
+	@go vet -all $(GO_PKGS) | tee /dev/stderr
 
 $(GO_PATH)/bin/golint:
 	@go get -u golang.org/x/lint/golint
@@ -63,7 +63,7 @@ $(GO_PATH)/bin/golint:
 .PHONY: lint/golint
 lint/golint: $(GO_PATH)/bin/golint  ## Verifies `golint` passes.
 	$(call target)
-	@golint ./... | grep -v '.pb.go' | grep -v vendor | tee /dev/stderr
+	@golint -min_confidence=0.3 -set_exit_status $(GO_PKGS)
 
 $(GO_PATH)/bin/vet:
 	@go get -u golang.org/x/tools/go/analysis/cmd/vet golang.org/x/tools/go/analysis/passes/...

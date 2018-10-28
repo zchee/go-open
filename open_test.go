@@ -6,7 +6,6 @@ package open
 
 import (
 	"context"
-	"os/exec"
 	"testing"
 )
 
@@ -38,9 +37,6 @@ func TestRun(t *testing.T) {
 			t.Parallel()
 
 			if err := Run(tc.input); (err != nil) != tc.wantErr {
-				if execErr, ok := err.(*exec.ExitError); ok {
-					err = execErr
-				}
 				t.Fatalf("failed to open.Run(%q): %+v", tc.input, err)
 			}
 		})
@@ -71,9 +67,6 @@ func TestRunContext(t *testing.T) {
 			t.Parallel()
 
 			if err := RunContext(context.Background(), tc.input); (err != nil) != tc.wantErr {
-				if execErr, ok := err.(*exec.ExitError); ok {
-					err = execErr
-				}
 				t.Fatalf("failed to open.RunContext(%q): %+v", tc.input, err)
 			}
 		})
@@ -108,9 +101,6 @@ func TestStart(t *testing.T) {
 				t.Errorf("failed to open.Start(%q): %+v", tc.input, err)
 			}
 			if err := waitFn(); (err != nil) != tc.wantErr {
-				if execErr, ok := err.(*exec.ExitError); ok {
-					err = execErr
-				}
 				t.Fatalf("failed to cmd.Wait()): %+v", err)
 			}
 		})
@@ -145,9 +135,6 @@ func TestStartContext(t *testing.T) {
 				t.Errorf("failed to open.StartContext(%q): %+v", tc.input, err)
 			}
 			if err := waitFn(); (err != nil) != tc.wantErr {
-				if execErr, ok := err.(*exec.ExitError); ok {
-					err = execErr
-				}
 				t.Fatalf("failed to cmd.Wait()): %+v", err)
 			}
 		})

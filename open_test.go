@@ -36,7 +36,7 @@ func TestRun(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			if err := Run(tc.input); (err != nil) != tc.wantErr {
+			if err := Run(tc.input); err != nil && (err != nil) != tc.wantErr {
 				t.Fatalf("failed to open.Run(%q): %+v", tc.input, err)
 			}
 		})
@@ -66,7 +66,7 @@ func TestRunContext(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			if err := RunContext(context.Background(), tc.input); (err != nil) != tc.wantErr {
+			if err := RunContext(context.Background(), tc.input); err != nil && (err != nil) != tc.wantErr {
 				t.Fatalf("failed to open.RunContext(%q): %+v", tc.input, err)
 			}
 		})
@@ -100,7 +100,7 @@ func TestStart(t *testing.T) {
 			if err != nil {
 				t.Errorf("failed to open.Start(%q): %+v", tc.input, err)
 			}
-			if err := waitFn(); (err != nil) != tc.wantErr {
+			if err := waitFn(); err != nil && (err != nil) != tc.wantErr {
 				t.Fatalf("failed to cmd.Wait()): %+v", err)
 			}
 		})
@@ -134,7 +134,7 @@ func TestStartContext(t *testing.T) {
 			if err != nil {
 				t.Errorf("failed to open.StartContext(%q): %+v", tc.input, err)
 			}
-			if err := waitFn(); (err != nil) != tc.wantErr {
+			if err := waitFn(); err != nil && (err != nil) != tc.wantErr {
 				t.Fatalf("failed to cmd.Wait()): %+v", err)
 			}
 		})
